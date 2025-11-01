@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitPulse - Dashboard</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header class="dashboard-header">
+        <div class="header-left">
+            <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+            </svg>
+            <h1>FitPulse</h1>
+        </div>
+        <div class="header-center">
+            <span id="currentDate"></span>
+        </div>
+        <div class="header-right">
+            <button id="darkModeToggle" class="icon-btn" title="Toggle Dark Mode">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path id="darkModeIcon" d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                </svg>
+            </button>
+            <button id="logoutBtn" class="btn btn-secondary">Logout</button>
+        </div>
+    </header>
+
+    <main class="dashboard-main">
+        <!-- Summary Cards -->
+        <section class="summary-cards">
+            <div class="summary-card">
+                <div class="card-icon steps-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 17v-6a2 2 0 0 0-2-2h-5l-5 5v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2z"/>
+                        <polyline points="14 9 9 4 4 9"/>
+                    </svg>
+                </div>
+                <div class="card-content">
+                    <h3 id="stepsCount" class="card-number">0</h3>
+                    <p class="card-label">Steps</p>
+                </div>
+            </div>
+            <div class="summary-card">
+                <div class="card-icon calories-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 2v20M2 12h20"/>
+                    </svg>
+                </div>
+                <div class="card-content">
+                    <h3 id="caloriesCount" class="card-number">0</h3>
+                    <p class="card-label">Calories</p>
+                </div>
+            </div>
+            <div class="summary-card">
+                <div class="card-icon minutes-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <polyline points="12 6 12 12 16 14"/>
+                    </svg>
+                </div>
+                <div class="card-content">
+                    <h3 id="minutesCount" class="card-number">0</h3>
+                    <p class="card-label">Active Minutes</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="dashboard-grid">
+            <!-- Left Column -->
+            <div class="dashboard-left">
+                <!-- Add Activity Form -->
+                <section class="card">
+                    <h2>Add Activity</h2>
+                    <form id="activityForm">
+                        <div class="form-group">
+                            <label for="activityType">Activity Type</label>
+                            <select id="activityType" required>
+                                <option value="">Select activity...</option>
+                                <option value="Walking">Walking</option>
+                                <option value="Running">Running</option>
+                                <option value="Cycling">Cycling</option>
+                                <option value="Swimming">Swimming</option>
+                                <option value="Yoga">Yoga</option>
+                                <option value="Gym">Gym</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="activityDuration">Duration (minutes)</label>
+                                <input type="number" id="activityDuration" required min="1" placeholder="30">
+                            </div>
+                            <div class="form-group">
+                                <label for="activityCalories">Calories</label>
+                                <input type="number" id="activityCalories" required min="0" placeholder="200">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="activitySteps">Steps</label>
+                            <input type="number" id="activitySteps" required min="0" placeholder="5000">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add Activity</button>
+                    </form>
+                </section>
+
+                <!-- Recent Activities -->
+                <section class="card">
+                    <h2>Recent Activities</h2>
+                    <div id="activitiesList" class="activities-list">
+                        <p class="empty-message">No activities yet. Add one above!</p>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Right Column -->
+            <div class="dashboard-right">
+                <!-- Goals Section -->
+                <section class="card">
+                    <h2>Daily Goals</h2>
+                    <div class="goals-form">
+                        <div class="form-group">
+                            <label for="stepsGoal">Steps Goal</label>
+                            <input type="number" id="stepsGoal" min="0" placeholder="10000">
+                        </div>
+                        <div class="form-group">
+                            <label for="caloriesGoal">Calories Goal</label>
+                            <input type="number" id="caloriesGoal" min="0" placeholder="2000">
+                        </div>
+                        <button type="button" id="saveGoalsBtn" class="btn btn-primary">Save Goals</button>
+                    </div>
+                    <div class="goals-progress">
+                        <div class="progress-item">
+                            <div class="progress-header">
+                                <span>Steps Progress</span>
+                                <span id="stepsProgressPercent">0%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div id="stepsProgressBar" class="progress-fill"></div>
+                            </div>
+                        </div>
+                        <div class="progress-item">
+                            <div class="progress-header">
+                                <span>Calories Progress</span>
+                                <span id="caloriesProgressPercent">0%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div id="caloriesProgressBar" class="progress-fill"></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Profile Section -->
+                <section class="card">
+                    <h2>Profile</h2>
+                    <form id="profileForm">
+                        <div class="form-group">
+                            <label for="profileName">Name</label>
+                            <input type="text" id="profileName" required>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="profileWeight">Weight (kg)</label>
+                                <input type="number" id="profileWeight" step="0.1" min="0">
+                            </div>
+                            <div class="form-group">
+                                <label for="profileHeight">Height (cm)</label>
+                                <input type="number" id="profileHeight" step="0.1" min="0">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="profileAge">Age</label>
+                            <input type="number" id="profileAge" min="0" max="150">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Update Profile</button>
+                    </form>
+                    <div class="bmi-display">
+                        <div class="bmi-label">BMI</div>
+                        <div id="bmiValue" class="bmi-value">--</div>
+                        <div id="bmiCategory" class="bmi-category">--</div>
+                    </div>
+                </section>
+
+                <!-- Chart Section -->
+                <section class="card">
+                    <h2>Activity Calories Chart</h2>
+                    <canvas id="activityChart"></canvas>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <footer class="dashboard-footer">
+        <p>© 2025 FitPulse – Track your best self.</p>
+        <div class="social-icons">
+            <a href="#" class="social-icon" title="Twitter" aria-label="Twitter">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/>
+                </svg>
+            </a>
+            <a href="#" class="social-icon" title="Instagram" aria-label="Instagram">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                    <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37zM17.5 6.5h.01"/>
+                </svg>
+            </a>
+            <a href="#" class="social-icon" title="GitHub" aria-label="GitHub">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+                </svg>
+            </a>
+        </div>
+    </footer>
+
+    <script src="js/dashboard.js"></script>
+</body>
+</html>
